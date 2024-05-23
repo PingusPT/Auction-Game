@@ -250,13 +250,23 @@
     import { tweened } from 'svelte/motion';
     import { cubicOut } from 'svelte/easing';
     import { derived } from 'svelte/store';
+    
+    let isOpen = false;
 
+    // Store para controlar a abertura das cortinas
+    const curtainWidth = tweened(50, { duration: 1000, easing: cubicOut });
+
+    function toggleCurtains() {
+        isOpen = !isOpen;
+        curtainWidth.set(isOpen ? 0 : 50);
+    }
+ //-------------------------------------------------------
     // Cria uma store tweened com valor inicial 0
     const count = tweened(0, {
         duration: 2000, // duração da animação em milissegundos
         easing: cubicOut // função de easing para suavizar a animação
     });
-
+    
     // Cria uma store derivada que arredonda o valor da store tweened
     const roundedCount = derived(count, $count => Math.round($count));
 
@@ -294,7 +304,29 @@
         ChossenImage = getRandomInt(0, CopiedArray.length)
         
     }
+    /*
+    function animateOpen() {
+        const box = document.querySelector('.overlay-image');
+        const box1 = document.querySelector('.overlay-image-left');
+        box.classList.add('slideIn1');
+        box1.classList.add('slideIn');
+    }
+    */
+    let isEaseInAnimation = true;
 
+    function toggleAnimation() {
+        isEaseInAnimation = !isEaseInAnimation;
+        const animatingDiv = document.getElementById('elementToSlide1');
+        console.log(animatingDiv.style.animation);
+        if (isEaseInAnimation) {
+            
+            //animatingDiv.style.animation = 'slideIn1 4s forwards';
+        } else {
+            animatingDiv.style.animation = 'slideOut1 4f forwards';
+        }
+    }
+    
+    
 </script>
 <div class="pb-8 pt-16 text-center">
     <p class="pb-4 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl font-bold text-purple-400">Round {round}/8</p>
@@ -363,6 +395,22 @@
         </div>
     {/if}
 </div>
+
+<div id="elementToSlide" class="overlay-image">
+    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" style="width: 100%; height: 100%;" />
+</div>
+
+<div id="elementToSlide1" class="overlay-image-left">
+    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" style="width: 100%; height: 100%;" />
+</div>
+
+<button on:click={toggleAnimation} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    Alternar Animação
+</button>
+
+
+
+
 <style>
     .no-spin::-webkit-outer-spin-button,
     .no-spin::-webkit-inner-spin-button {
@@ -378,4 +426,107 @@
         height: min-content;
         
     }
+    
+    .overlay-image {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        z-index: 9999;
+        animation: slideIn1 4s forwards; /* Aplica a animação */
+    }
+    
+    @keyframes slideIn1 {
+        from {
+            transform: translateX(0%);
+        }
+        10%{
+            transform: translateX(10%);
+        }
+        50%{
+            transform: translateX(150%);
+        }
+        to {
+            transform: translateX(200%);
+        }
+    }
+
+    @keyframes slideOut1 {
+        from {
+            transform: translateX(200%);
+        }
+        10%{
+            transform: translateX(150%);
+        }
+        50%{
+            transform: translateX(10%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+    
+    .overlay-image-left{
+        position: fixed;
+        top: 0;
+        left: 0%;
+        right: 0%;
+        width: 50%;
+        height: 100%;
+        z-index: 9999;
+        animation: slideIn 4s forwards;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(0%);
+        }
+        10%{
+            transform: translateX(-10%);
+        }
+        50%{
+            transform: translateX(-150%);
+        }
+        to {
+            transform: translateX(-200%);
+        }
+    }
+    @keyframes slideOut {
+        from {
+            transform: translateX(-200%);
+        }
+        10%{
+            transform: translateX(-150%);
+        }
+        50%{
+            transform: translateX(-10%);
+        }
+        to {
+            transform: translateX(0%);
+        }
+    }
+
+    @keyframes ease-in-animation {
+        0% {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes ease-out-animation {
+        0% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        100% {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+    }
+    
 </style>
