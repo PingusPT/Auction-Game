@@ -208,6 +208,8 @@
     
     ]
 
+    
+    
     let CopiedArray = ImagesNames;
     let inputValue = null;
     let bidSource = "/src/lib/images/BidUnColor.png";
@@ -250,6 +252,7 @@
     import { tweened } from 'svelte/motion';
     import { cubicOut } from 'svelte/easing';
     import { derived } from 'svelte/store';
+    import { slide  } from 'svelte/transition';
     
     let isOpen = false;
 
@@ -316,14 +319,7 @@
 
     function toggleAnimation() {
         isEaseInAnimation = !isEaseInAnimation;
-        const animatingDiv = document.getElementById('elementToSlide1');
-        console.log(animatingDiv.style.animation);
-        if (isEaseInAnimation) {
-            
-            //animatingDiv.style.animation = 'slideIn1 4s forwards';
-        } else {
-            animatingDiv.style.animation = 'slideOut1 4f forwards';
-        }
+        console.log(isEaseInAnimation)
     }
     
     
@@ -400,8 +396,23 @@
     <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" style="width: 100%; height: 100%;" />
 </div>
 
-<div id="elementToSlide1" class="overlay-image-left">
-    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" style="width: 100%; height: 100%;" />
+<div class="overlay-image-left">
+    {#if isEaseInAnimation}
+        <img
+                src="/src/lib/images/CortinaRoxa.jpg"
+                alt="Imagem"
+                style="width: 100%; height: 100%;"
+                in:slide={{ delay: 0, duration: 300, axis: "x" }}
+        />
+    {:else}
+        <img
+                src="/src/lib/images/CortinaRoxa.jpg"
+                alt="Imagem"
+                style="width: 100%; height: 100%;"
+                out:slide={{ delay: 0, duration: 300, axis: "x" }}
+        />
+    {/if}
+        
 </div>
 
 <button on:click={toggleAnimation} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -470,12 +481,10 @@
     .overlay-image-left{
         position: fixed;
         top: 0;
-        left: 0%;
-        right: 0%;
         width: 50%;
         height: 100%;
         z-index: 9999;
-        animation: slideIn 4s forwards;
+        
     }
     
     @keyframes slideIn {
