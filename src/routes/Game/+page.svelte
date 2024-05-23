@@ -1,4 +1,5 @@
 <script>
+    
     let ImagesNames = [
         {
             price: 4727500,
@@ -134,9 +135,9 @@
         },
         {
             price: 16165000,
-            pictureName: "Forme uniche della continuità nello spazio (Unique Forms of Continuity in Space",
+            pictureName: "Forme uniche della continuità nello spazio (Unique Forms of Continuity in Space)",
             autorName: "Umberto Boccioni, 1972, Conceived in 1913 and cast in 1972",
-            imageSource: "/src/lib/images/ImgGame/Forme uniche della continuità nello spazio (Unique Forms of Continuity in Space.jpg"
+            imageSource: "/src/lib/images/ImgGame/Forme uniche della continuità nello spazio (Unique Forms of Continuity in Space).jpg"
         },
         {
             price: 519000,
@@ -196,29 +197,34 @@
             price: 52000,
             pictureName: "Magnolia Door One",
             autorName: "Gary Hume, Painted in 1988",
-            imageSource: "/src/lib/images/ImgGame/Magnolia Door One"
+            imageSource: "/src/lib/images/ImgGame/Magnolia Door One.jpg"
         },
         {
             price: 22587500,
             pictureName: "Ocean Park #137",
             autorName: "Richard Diebenkorn, 1985",
-            imageSource: "/src/lib/images/ImgGame/Ocean Park #137"
+            imageSource: "/src/lib/images/ImgGame/Ocean Park 137.jpg"
         }
     
     ]
-    let CopiedArray = ImagesNames;
 
+    let CopiedArray = ImagesNames;
+    let inputValue = null;
+    let bidSource = "/src/lib/images/BidUnColor.png";
+    let binded = false
+    let points = 0;
+    let showPoints = false;
+    let ChossenImage = getRandomInt(0, CopiedArray.length)
+    let TotalPoints = 0;
+    let round = 1;
+    
     function getRandomInt(min, max) {
         const minCeiled = Math.ceil(min);
         const maxFloored = Math.floor(max);
         return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
     }
-    function Write(){
-        ImagesNames.forEach((element) => console.log(element.pictureName));
-
-    }
     
-    let bidSource = "/src/lib/images/BidUnColor.png";
+    
     function ChangeBidSprite()
     {
         bidSource = "/src/lib/images/bidColor.png";
@@ -227,9 +233,18 @@
     {
         bidSource = "/src/lib/images/BidUnColor.png";
     }
-    function BidClick()
-    {
+    
+    
+    function BidClick() {
         
+        if (inputValue != null) {
+            
+            animateTo(CopiedArray[ChossenImage].price);
+            binded = true; // Define como true quando o usuário clica na imagem Bid
+            points = calcPoints(inputValue, CopiedArray[ChossenImage].price);
+            showPoints = true;
+            
+        }
     }
 
     import { tweened } from 'svelte/motion';
@@ -250,33 +265,117 @@
         count.set(target);
     }
     function formatNumberWithSpaces(number) {
-        return number.toLocaleString('en-US').replace(/,/g, ' ');
+        const numberString = String(number).replace(/,/g, '');
+        // Insere espaços a cada três dígitos
+        const formattedNumber = numberString.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        // Retorna o número formatado com o símbolo "$" no início
+        return '$' + formattedNumber;
     }
 
-    Write();
+    function calcPoints(userValue, originalPrice) {
+        const difference = Math.abs(originalPrice - userValue);
+        const score = Math.max(0, 100 - (difference / originalPrice) * 100);
+        return Math.round(score);
+    }
 
-    const ChossenImage = getRandomInt(0, CopiedArray.length)
+    function NextPicture(){
+        showPoints = false;
+        binded = false;
+        bidSource = "/src/lib/images/BidUnColor.png";
+        inputValue = null;
+        TotalPoints += points;
+        points = 0;
+        round++;
+        if(round >= 8)
+        {
+            round = 0;
+        }
+        CopiedArray.splice(ChossenImage, 1)
+        ChossenImage = getRandomInt(0, CopiedArray.length)
+        
+    }
 
 </script>
-<p class="text-9xl">{CopiedArray[ChossenImage].pictureName}</p>
-<img src="{CopiedArray[ChossenImage].imageSource}" alt="pintura bonita" height="1000" width="1000">
+<div class="pb-8 pt-16 text-center">
+    <p class="pb-4 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl font-bold text-purple-400">Round {round}/8</p>
+    <span class="inline-block bg-purple-300 p-4 rounded-lg">
+        <p class="text-base sm:text-lg md:text-xl lg:text-3xl xl:text-6xl font-bold text-purple-950">
+            {CopiedArray[ChossenImage].pictureName}
+        </p>
+    </span>
+</div>
+<div class="flex items-center justify-center flex-wrap  ">
+    <img 
+        src="{CopiedArray[ChossenImage].imageSource}" 
+     
+        alt="pintura bonita" 
+     
+        class="container object-contain border-double border-purple-900 border-8"
+    >   
+</div>
+<p class="text-base sm:text-sm md:text-base lg:text-xl xl:text-2xl text-center font-semibold pb-8 pt-16 text-purple-600">{CopiedArray[ChossenImage].autorName}</p>
 
-<p>{CopiedArray[ChossenImage].autorName}</p>
-<form id="numberForm"  >
-   
-    <div class="flex items-center justify-center ">
-        <input placeholder="$0" type="text" id="number" name="number" class="number-input h-8 mr-5 text-center appearance-none px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 placeholder-gray-400 text-sm" required>
-        <img src="{bidSource}" alt="Bid" on:mouseover={ChangeBidSprite} on:mouseout={ChangeDefaultBidSprite} on:click={BidClick} width="100" >
+
+<form id="numberForm" on:submit|preventDefault={BidClick}>
+    <div class="flex items-center justify-center flex-wrap">
+        {#if inputValue === null || !binded}
+            <input
+                placeholder="$0"
+                type="number"
+                id="number"
+                name="number"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                bind:value={inputValue}
+                class="border-8 border-purple-700 bg-purple-300 text-purple-950 placeholder:text-purple-950 text-2xl number-input h-24 text-center appearance-none px-4 py-2 focus:outline-none focus:border-blue-500 placeholder-gray-400 no-spin"
+                required
+            >
+        {:else}
+            <input
+                    placeholder="$0"
+                    type="text"
+                    id="number"
+                    name="number"
+                    value={formatNumberWithSpaces($roundedCount)}
+                    class="border-8 border-purple-700 bg-purple-300 text-purple-950 placeholder:text-purple-950 text-2xl number-input h-24 text-center appearance-none px-4 py-2 focus:outline-none focus:border-blue-500 placeholder-gray-400 no-spin"
+                    required
+            >
+        {/if}
+        <img
+                src="{bidSource}"
+                alt="Bid"
+                on:mouseover={ChangeBidSprite}
+                on:mouseout={ChangeDefaultBidSprite}
+                on:click={BidClick}
+                width="96"
+                class="border-8 border-purple-700 cursor-pointer"
+
+        >
+        
     </div>
-    <input type="submit" value="Enviar">
 </form>
 
-<div >
-    <!-- Botão para iniciar a animação -->
-    <button on:click={() => animateTo(CopiedArray[ChossenImage].price)}>Animar para 100</button>
-    
 
-    <!-- Exibição do valor animado arredondado -->
-    <div class="counter">{formatNumberWithSpaces($roundedCount)}</div>
+<div class="flex items-center justify-center flex-wrap pt-16 text-center">
+    {#if showPoints}
+        <div class="inline-flex bg-fuchsia-200 p-4 rounded-lg ">
+            <p class="text-2xl text-purple-950 mx-auto pr-20 my-auto">{points} points</p>
+            <button class="rounded-lg bg-purple-300 h-24 w-44 text-2xl font-extrabold text-purple-950 border-dashed" on:click={NextPicture}>Next</button>
+        </div>
+    {/if}
 </div>
-
+<style>
+    .no-spin::-webkit-outer-spin-button,
+    .no-spin::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .no-spin {
+        -moz-appearance: textfield;
+    }
+    .container {
+        
+        width: min-content;
+        height: min-content;
+        
+    }
+</style>
