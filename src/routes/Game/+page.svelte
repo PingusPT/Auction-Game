@@ -479,7 +479,7 @@
 					x: -900
 				}}
                 >
-                    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full" style="right: 100%"/>
+                    <img src="https://media.istockphoto.com/id/1387068345/vector/stage-curtain-background.jpg?s=612x612&w=0&k=20&c=g_wq5Kw7BcaWFJFzo584JCnPRQ6rR27ZMff2QmPbMGc=" alt="Imagem" class="object-cover h-full" style="right: 100%"/>
                 </div>
                 <div
                         in:fly={{
@@ -488,7 +488,7 @@
 					x: 900
 				}}
                 >
-                    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full"/>
+                    <img  src="https://media.istockphoto.com/id/1387068345/vector/stage-curtain-background.jpg?s=612x612&w=0&k=20&c=g_wq5Kw7BcaWFJFzo584JCnPRQ6rR27ZMff2QmPbMGc=" alt="Imagem" class="object-cover h-full"/>
                 </div>
             {/if}
 
@@ -505,7 +505,7 @@
 					x: -900
 				}}
                 >
-                    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full" style="right: 100%"/>
+                    <img src="https://media.istockphoto.com/id/1387068345/vector/stage-curtain-background.jpg?s=612x612&w=0&k=20&c=g_wq5Kw7BcaWFJFzo584JCnPRQ6rR27ZMff2QmPbMGc=" alt="Imagem" class="object-cover h-full" style="right: 100%"/>
                 </div>
                 <div
                         out:fly={{
@@ -514,7 +514,7 @@
 					x: 900
 				}}
                 >
-                    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full"/>
+                    <img src="https://media.istockphoto.com/id/1387068345/vector/stage-curtain-background.jpg?s=612x612&w=0&k=20&c=g_wq5Kw7BcaWFJFzo584JCnPRQ6rR27ZMff2QmPbMGc=" alt="Imagem" class="object-cover h-full"/>
                 </div>
             {/if}
         </div>
