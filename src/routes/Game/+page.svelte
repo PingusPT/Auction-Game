@@ -1,4 +1,32 @@
 <script>
+    import { tweened } from 'svelte/motion';
+    import { cubicOut } from 'svelte/easing';
+    import { derived } from 'svelte/store';
+    import { fly } from 'svelte/transition';
+
+
+    let CopiedArray = ImagesNames;
+    let inputValue = 0;
+    let bidSource = '/src/lib/images/BidUnColor.png';
+    let binded = false;
+    let points = 0;
+    let showPoints = false;
+    let ChossenImage = getRandomInt(0, CopiedArray.length);
+    let TotalPoints = 0;
+    let round = 1;
+    let isOpen = false;
+    const curtainWidth = tweened(50, { duration: 1000, easing: cubicOut });
+    const count = tweened(0, {
+        duration: 2000, // duração da animação em milissegundos
+        easing: cubicOut // função de easing para suavizar a animação
+    });
+    let isEaseInAnimation = false;
+    let inAnimation = true;
+    let ControllDiv = true;
+    let ShowGame = true;//-----------------------------------------------------
+
+    const roundedCount = derived(count, ($count) => Math.round($count));
+    
     let ImagesNames = [
         {
             price: 4727500,
@@ -209,15 +237,7 @@
         }
     ];
 
-    let CopiedArray = ImagesNames;
-    let inputValue = null;
-    let bidSource = '/src/lib/images/BidUnColor.png';
-    let binded = false;
-    let points = 0;
-    let showPoints = false;
-    let ChossenImage = getRandomInt(0, CopiedArray.length);
-    let TotalPoints = 0;
-    let round = 1;
+    
 
     function getRandomInt(min, max) {
         const minCeiled = Math.ceil(min);
@@ -233,7 +253,7 @@
     }
 
     function BidClick() {
-        if (inputValue != null) {
+        if (inputValue !== 0) {
             animateTo(CopiedArray[ChossenImage].price);
             binded = true; // Define como true quando o usuário clica na imagem Bid
             points = calcPoints(inputValue, CopiedArray[ChossenImage].price);
@@ -241,15 +261,8 @@
         }
     }
 
-    import { tweened } from 'svelte/motion';
-    import { cubicOut } from 'svelte/easing';
-    import { derived } from 'svelte/store';
-    import { slide, fly } from 'svelte/transition';
-
-    let isOpen = false;
-
-    // Store para controlar a abertura das cortinas
-    const curtainWidth = tweened(50, { duration: 1000, easing: cubicOut });
+    
+    
 
     function toggleCurtains() {
         isOpen = !isOpen;
@@ -257,13 +270,7 @@
     }
     //-------------------------------------------------------
     // Cria uma store tweened com valor inicial 0
-    const count = tweened(0, {
-        duration: 2000, // duração da animação em milissegundos
-        easing: cubicOut // função de easing para suavizar a animação
-    });
-
-    // Cria uma store derivada que arredonda o valor da store tweened
-    const roundedCount = derived(count, ($count) => Math.round($count));
+    
 
     // Função para iniciar a animação
     function animateTo(target) {
@@ -291,7 +298,7 @@
         ShowGame = true;
         TotalPoints = 0;
         CopiedArray = ImagesNames;
-        inputValue = null;
+        inputValue = 0;
         showPoints = false;
         binded = false;
         points = 0;
@@ -313,7 +320,7 @@
         showPoints = false;
         binded = false;
         bidSource = '/src/lib/images/BidUnColor.png';
-        inputValue = null;
+        inputValue = 0;
         TotalPoints += points;
         points = 0;
         round++;
@@ -331,10 +338,7 @@
 
     
     
-    let isEaseInAnimation = false;
-    let inAnimation = true;
-    let ControllDiv = true;
-    let ShowGame = true;//-----------------------------------------------------
+   
     
 
     async function InitialOpenAnimation(){
@@ -399,7 +403,7 @@
 
 <form id="numberForm" on:submit|preventDefault={BidClick}>
     <div class="flex items-center justify-center flex-wrap">
-        {#if inputValue === null || !binded}
+        {#if inputValue === 0 || !binded}
             <input
                     placeholder="$0"
                     type="number"
