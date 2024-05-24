@@ -283,7 +283,11 @@
         });
     }
 
-    function FullResetGame() {
+    async function FullResetGame() {
+        ControllDiv = true;
+        await delayedFunction(100);
+        CloseAnimation();
+        await delayedFunction(1000);
         ShowGame = true;
         TotalPoints = 0;
         CopiedArray = ImagesNames;
@@ -291,8 +295,8 @@
         showPoints = false;
         binded = false;
         points = 0;
-        
         console.log("ResetGame");
+        OpenAnimation();
     }
     
     function calcPoints(userValue, originalPrice) {
@@ -330,21 +334,9 @@
     let isEaseInAnimation = false;
     let inAnimation = true;
     let ControllDiv = true;
-    let ShowGame = true;
+    let ShowGame = true;//-----------------------------------------------------
     
-/*
-   async function toggleAnimation() {
-       
-       OpenAnimation();
-       
-       
-       CloseAnimation();
-       
-       await delayedFunction(1000000);
-       
-       
-    }
-    */
+
     async function InitialOpenAnimation(){
         await delayedFunction(2000)
         isEaseInAnimation = !isEaseInAnimation;
@@ -456,10 +448,21 @@
 
 
 {:else}
-    <h1>{TotalPoints} Points</h1>
-    <button on:click={FullResetGame} class="rounded-lg bg-purple-300 h-24 w-44 text-2xl font-extrabold text-purple-950 border-dashed">
-        Reset Game
-    </button>
+    <div class="border-double border-purple-950 inline-block bg-purple-300 p-4 rounded-lg">
+    <h1 class="flex items-center justify-center flex-wrap text-base sm:text-1xl md:text-2xl lg:text-5xl xl:text-6xl font-bold text-purple-950 mt-14 mb-6 ">{TotalPoints} Points</h1>
+    </div>
+    <div class="flex items-center justify-center flex-wrap">
+    
+    <img src="https://blog.abac.org.br/wp-content/uploads/2023/12/auction-gavel-with-coins-on-violet-background-public-sale.jpg_s1024x1024wisk20crZUu8DnTej-HUfGg14EEAgvCHa5tPlLTsCOMRrJ_xTU-768x768.jpg"
+    class="container object-contain border-double border-purple-900 border-8 mt-16"
+    alt="Auction Img">
+    </div>
+    <div class="flex items-center justify-center flex-wrap pt-16">
+        <button on:click={FullResetGame} 
+                class="rounded-lg bg-purple-300 h-24 w-44 text-2xl font-extrabold text-purple-950 border-dashed hover:bg-fuchsia-200">
+             Play Again
+        </button>
+    </div>
 {/if}
 {#if ControllDiv }
     <div class="absolute w-screen top-0 left-0">
