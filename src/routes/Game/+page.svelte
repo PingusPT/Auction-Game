@@ -5,13 +5,13 @@
     import { fly } from 'svelte/transition';
 
 
-    let CopiedArray = ImagesNames;
+    
     let inputValue = 0;
     let bidSource = '/src/lib/images/BidUnColor.png';
     let binded = false;
     let points = 0;
     let showPoints = false;
-    let ChossenImage = getRandomInt(0, CopiedArray.length);
+    
     let TotalPoints = 0;
     let round = 1;
     let isOpen = false;
@@ -237,14 +237,14 @@
         }
     ];
 
-    
 
+    let CopiedArray = ImagesNames;
     function getRandomInt(min, max) {
         const minCeiled = Math.ceil(min);
         const maxFloored = Math.floor(max);
         return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
     }
-
+    let ChossenImage = getRandomInt(0, CopiedArray.length);
     function ChangeBidSprite() {
         bidSource = '/src/lib/images/bidColor.png';
     }
