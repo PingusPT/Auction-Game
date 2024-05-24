@@ -7,7 +7,7 @@
 
     
     let inputValue = 0;
-    let bidSource = '/src/lib/images/BidUnColor.png';
+    let bidSource = '/src/lib/images/BidUnColor.png';///src/lib/images/BidUnColor.png
     let binded = false;
     let points = 0;
     let showPoints = false;
@@ -246,10 +246,10 @@
     }
     let ChossenImage = getRandomInt(0, CopiedArray.length);
     function ChangeBidSprite() {
-        bidSource = '/src/lib/images/bidColor.png';
+        bidSource = 'https://cdn-icons-png.flaticon.com/512/2570/2570154.png';
     }
     function ChangeDefaultBidSprite() {
-        bidSource = '/src/lib/images/BidUnColor.png';
+        bidSource = 'https://cdn-icons-png.flaticon.com/512/2581/2581347.png';
     }
 
     function BidClick() {
@@ -319,7 +319,7 @@
         await delayedFunction(1000);
         showPoints = false;
         binded = false;
-        bidSource = '/src/lib/images/BidUnColor.png';
+        bidSource = 'https://cdn-icons-png.flaticon.com/512/2581/2581347.png';
         inputValue = 0;
         TotalPoints += points;
         points = 0;
@@ -432,7 +432,7 @@
                 on:mouseout={ChangeDefaultBidSprite}
                 on:click={BidClick}
                 width="96"
-                class="border-8 border-purple-700 cursor-pointer"
+                class="border-8 border-purple-700 cursor-pointer bg-fuchsia-200"
         />
     </div>
 </form>
