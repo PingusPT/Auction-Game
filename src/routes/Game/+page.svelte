@@ -277,13 +277,35 @@
         return '$' + formattedNumber;
     }
 
+    function delayedFunction(delay) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, delay);
+        });
+    }
+
+    function FullResetGame() {
+        ShowGame = true;
+        TotalPoints = 0;
+        CopiedArray = ImagesNames;
+        inputValue = null;
+        showPoints = false;
+        binded = false;
+        points = 0;
+        
+        console.log("ResetGame");
+    }
+    
     function calcPoints(userValue, originalPrice) {
         const difference = Math.abs(originalPrice - userValue);
         const score = Math.max(0, 100 - (difference / originalPrice) * 100);
         return Math.round(score);
     }
 
-    function NextPicture() {
+    async function NextPicture() {
+        ControllDiv = true;
+        await delayedFunction(100);
+        CloseAnimation();
+        await delayedFunction(1000);
         showPoints = false;
         binded = false;
         bidSource = '/src/lib/images/BidUnColor.png';
@@ -291,47 +313,75 @@
         TotalPoints += points;
         points = 0;
         round++;
-        if (round >= 8) {
-            round = 0;
+        if (round >= 9) {
+            round = 1;
+            ShowGame = false;
         }
         CopiedArray.splice(ChossenImage, 1);
         ChossenImage = getRandomInt(0, CopiedArray.length);
+
+        await delayedFunction(100);
+        
+        OpenAnimation();
     }
 
-    function delayedFunction(delay) {
-        return new Promise((resolve) => {
-            setTimeout(resolve, delay);
-        });
-    }
+    
     
     let isEaseInAnimation = false;
     let inAnimation = true;
-
+    let ControllDiv = true;
+    let ShowGame = true;
+    
+/*
    async function toggleAnimation() {
        
-       isEaseInAnimation = !isEaseInAnimation;
+       OpenAnimation();
        
-       await delayedFunction(1000);
        
-       inAnimation = !inAnimation;
+       CloseAnimation();
+       
+       await delayedFunction(1000000);
+       
+       
+    }
+    */
+    async function InitialOpenAnimation(){
+        await delayedFunction(2000)
+        isEaseInAnimation = !isEaseInAnimation;
+        await delayedFunction(1000);
 
-       await delayedFunction(1000);
-        
-       if(isEaseInAnimation && !inAnimation)
-       {
-           console.log("Reset")
-           isEaseInAnimation = false;
-           inAnimation = true;
-       }
+        ControllDiv = false;
+    }
+    
+    async function OpenAnimation(){
        
-       console.log("inAnimation é " + inAnimation);
-       console.log("isEaseInAnimation é " + isEaseInAnimation);
-       console.log("----------------------------------");
+        isEaseInAnimation = !isEaseInAnimation;
+        
+        await delayedFunction(1000);
+
+        ControllDiv = false;
+        
     }
 
-    
-</script>
+    async function CloseAnimation(){
+        
+        inAnimation = !inAnimation;
 
+        await delayedFunction(1000);//is
+
+        if(isEaseInAnimation && !inAnimation)
+        {
+            
+            isEaseInAnimation = false;
+            inAnimation = true;
+        }
+    }
+    
+    
+
+    InitialOpenAnimation();
+</script>
+{#if ShowGame}
 <div class="pb-8 pt-16 text-center">
     <p class="pb-4 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl font-bold text-purple-400">
         Round {round}/8
@@ -403,65 +453,67 @@
     {/if}
 </div>
 
-<div class="absolute w-screen top-0 left-0">
-    <div class="flex relative w-full h-screen">
-        {#if isEaseInAnimation && !inAnimation}
-            
-            <div
-                    in:fly={{
+
+
+{:else}
+    <h1>{TotalPoints} Points</h1>
+    <button on:click={FullResetGame} class="rounded-lg bg-purple-300 h-24 w-44 text-2xl font-extrabold text-purple-950 border-dashed">
+        Reset Game
+    </button>
+{/if}
+{#if ControllDiv }
+    <div class="absolute w-screen top-0 left-0">
+        <div class="flex relative w-full h-screen">
+            {#if isEaseInAnimation && !inAnimation}
+
+                <div
+                        in:fly={{
 					delay: 0,
 					duration: 1000,
 					x: -900
 				}}
-            >
-                <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full" style="right: 100%"/>
-            </div>
-            <div
-                    in:fly={{
+                >
+                    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full" style="right: 100%"/>
+                </div>
+                <div
+                        in:fly={{
 					delay: 0,
 					duration: 1000,
 					x: 900
 				}}
-            >
-                <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full"/>
-            </div>
-        {/if}
-        
-    </div>
-</div>
+                >
+                    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full"/>
+                </div>
+            {/if}
 
-<div class="absolute w-screen top-0 left-0">
-    <div class="flex relative w-full h-screen">
-        {#if !isEaseInAnimation }
-            <div
-                    out:fly={{
+        </div>
+    </div>
+
+    <div class="absolute w-screen top-0 left-0">
+        <div class="flex relative w-full h-screen">
+            {#if !isEaseInAnimation }
+                <div
+                        out:fly={{
 					delay: 0,
 					duration: 1000,
 					x: -900
 				}}
-            >
-                <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full" style="right: 100%"/>
-            </div>
-            <div
-                    out:fly={{
+                >
+                    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full" style="right: 100%"/>
+                </div>
+                <div
+                        out:fly={{
 					delay: 0,
 					duration: 1000,
 					x: 900
 				}}
-            >
-                <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full"/>
-            </div>
-        {/if}
+                >
+                    <img src="/src/lib/images/CortinaRoxa.jpg" alt="Imagem" class="object-cover h-full"/>
+                </div>
+            {/if}
+        </div>
     </div>
-</div>
-
-<button
-        on:click={toggleAnimation}
-        class="bg-fuchsia-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
->
-    Alternar Animação {isEaseInAnimation}
-</button>
-
+{/if}
 <style>
     .no-spin::-webkit-outer-spin-button,
     .no-spin::-webkit-inner-spin-button {
